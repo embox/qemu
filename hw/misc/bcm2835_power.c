@@ -14,6 +14,7 @@
 typedef struct {
     SysBusDevice busdev;
     MemoryRegion iomem;
+    uint64_t mask;
     int pending;
     qemu_irq mbox_irq;
 } bcm2835_power_state;
@@ -26,7 +27,7 @@ static uint64_t bcm2835_power_read(void *opaque, hwaddr offset,
 
     switch (offset) {
     case 0:
-        res = MBOX_CHAN_POWER;
+        res = MBOX_CHAN_POWER | s->mask;
         s->pending = 0;
         qemu_set_irq(s->mbox_irq, 0);
         break;
@@ -46,6 +47,7 @@ static void bcm2835_power_write(void *opaque, hwaddr offset,
     bcm2835_power_state *s = (bcm2835_power_state *)opaque;
     switch (offset) {
     case 0:
+    	s->mask = value;
         s->pending = 1;
         qemu_set_irq(s->mbox_irq, 1);
         break;
@@ -81,6 +83,7 @@ static int bcm2835_power_init(SysBusDevice *sbd)
     bcm2835_power_state *s = BCM2835_POWER(dev);
 
     s->pending = 0;
+    s->mask = 0;
 
     sysbus_init_irq(sbd, &s->mbox_irq);
     memory_region_init_io(&s->iomem, OBJECT(s), &bcm2835_power_ops, s,
