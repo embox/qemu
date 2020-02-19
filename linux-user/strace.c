@@ -11,6 +11,8 @@
 #include <sched.h>
 #include "qemu.h"
 
+#include <sys/sysmacros.h>
+
 int do_strace=0;
 
 struct syscallname {
