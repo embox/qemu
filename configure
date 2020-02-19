@@ -407,6 +407,7 @@ sdl2_config="${SDL2_CONFIG-${cross_prefix}sdl2-config}"
 ARFLAGS="${ARFLAGS-rv}"
 
 # default flags for all hosts
+QEMU_CFLAGS="-Wno-format-truncation $QEMU_CFLALGS"
 QEMU_CFLAGS="-fno-strict-aliasing -fno-common $QEMU_CFLAGS"
 QEMU_CFLAGS="-Wall -Wundef -Wwrite-strings -Wmissing-prototypes $QEMU_CFLAGS"
 QEMU_CFLAGS="-Wstrict-prototypes -Wredundant-decls $QEMU_CFLAGS"
